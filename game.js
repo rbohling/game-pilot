@@ -97,49 +97,57 @@ const ShooterGame = (function() {
     }
     
     function updateBullets() {
-        bullets.forEach((bullet, index) => {
-            bullet.y -= bullet.speed;
-            if (bullet.y < 0) {
-                bullets.splice(index, 1);
+        // Use reverse loop to safely remove bullets while iterating
+        for (let i = bullets.length - 1; i >= 0; i--) {
+            bullets[i].y -= bullets[i].speed;
+            if (bullets[i].y < 0) {
+                bullets.splice(i, 1);
             }
-        });
+        }
     }
     
     function updateEnemies() {
-        enemies.forEach((enemy, index) => {
-            enemy.y += enemy.speed;
-            if (enemy.y > canvas.height) {
-                enemies.splice(index, 1);
+        // Use reverse loop to safely remove enemies while iterating
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            enemies[i].y += enemies[i].speed;
+            if (enemies[i].y > canvas.height) {
+                enemies.splice(i, 1);
                 // Enemy passed through - decrease score
                 decreaseScore(5);
             }
-        });
+        }
     }
     
     function checkCollisions() {
-        // Check bullet-enemy collisions
-        bullets.forEach((bullet, bulletIndex) => {
-            enemies.forEach((enemy, enemyIndex) => {
+        // Check bullet-enemy collisions using reverse loops
+        for (let i = bullets.length - 1; i >= 0; i--) {
+            for (let j = enemies.length - 1; j >= 0; j--) {
+                const bullet = bullets[i];
+                const enemy = enemies[j];
+                
                 if (bullet.x < enemy.x + enemy.width &&
                     bullet.x + bullet.width > enemy.x &&
                     bullet.y < enemy.y + enemy.height &&
                     bullet.y + bullet.height > enemy.y) {
-                    bullets.splice(bulletIndex, 1);
-                    enemies.splice(enemyIndex, 1);
+                    bullets.splice(i, 1);
+                    enemies.splice(j, 1);
                     increaseScore(10);
+                    break; // Break inner loop since bullet is destroyed
                 }
-            });
-        });
+            }
+        }
         
         // Check player-enemy collisions
-        enemies.forEach((enemy, index) => {
+        for (let i = 0; i < enemies.length; i++) {
+            const enemy = enemies[i];
             if (player.x < enemy.x + enemy.width &&
                 player.x + player.width > enemy.x &&
                 player.y < enemy.y + enemy.height &&
                 player.y + player.height > enemy.y) {
                 gameOver();
+                break; // Game over, no need to check more collisions
             }
-        });
+        }
     }
     
     function spawnEnemy() {

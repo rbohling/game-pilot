@@ -108,7 +108,8 @@ document.getElementById('restartButton').removeEventListener('click', boundResta
 ├── style.css               # Styling for the game
 ├── game.js                 # Main game logic with Module Pattern
 ├── test-module-pattern.js  # Test file to verify implementation
-└── README.md               # This documentation
+├── IMPLEMENTATION.md       # Technical implementation documentation
+└── README.md               # Project overview
 ```
 
 ## How to Run
